@@ -9,13 +9,14 @@ class Board extends Component{
       boardWidth: 5,
       robotPosX: 0,
       robotPosY: 0,
-      robotDirection: 'NORTH',
+      robotDirection: 'north',
     };
   }
-  handlePositionBlur(target) {
-    const id = target.id;
-    const value = target.value;
+  handlePositionBlur({id, value}) {
     this.setState({[id]: value});
+  }
+  handleDirectionBlur({value}) {
+    this.setState({robotDirection: value});
   }
   render() {
     const {robotPosX, robotPosY, robotDirection } =  this.state;
@@ -35,7 +36,7 @@ class Board extends Component{
           <option value = "4">4</option>
           <option value = "5">5</option>
         </select>
-        <select name = "direction" id = "direction">
+        <select name = "robotDirection" id = "robotDirection" value = { this.robotDirection } onBlur = { (e) => this.handleDirectionBlur(e.target) }>
           <option value = "north">north</option>
           <option value = "south">south</option>
           <option value = "west">west</option>
