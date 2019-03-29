@@ -12,18 +12,23 @@ class Board extends Component{
       robotDirection: 'NORTH',
     };
   }
+  handlePositionBlur(target) {
+    const id = target.id;
+    const value = target.value;
+    this.setState({[id]: value});
+  }
   render() {
     const {robotPosX, robotPosY, robotDirection } =  this.state;
     return(
       <main>
-        <select name = "x" id = "x">
+        <select name = "robotPosX" id = "robotPosX" value = { this.robotPosX } onBlur = { (e) => this.handlePositionBlur(e.target) }>
           <option value = "1">1</option>
           <option value = "2">2</option>
           <option value = "3">3</option>
           <option value = "4">4</option>
           <option value = "5">5</option>
         </select>
-        <select name = "y" id = "y">
+        <select name = "robotPosY" id = "robotPosY" value = { this.robotPosY } onBlur = { (e) => this.handlePositionBlur(e.target) }>
           <option value = "1">1</option>
           <option value = "2">2</option>
           <option value = "3">3</option>
