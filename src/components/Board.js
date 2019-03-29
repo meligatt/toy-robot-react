@@ -10,6 +10,7 @@ class Board extends Component{
       robotPosX: 0,
       robotPosY: 0,
       robotDirection: 'north',
+      shouldPlace: false
     };
   }
   handlePositionBlur({id, value}) {
@@ -18,8 +19,12 @@ class Board extends Component{
   handleDirectionBlur({value}) {
     this.setState({robotDirection: value});
   }
+  handlePlaceClick() {
+    // here should actually move the robot
+    this.setState({shouldPlace: true});
+  }
   render() {
-    const {robotPosX, robotPosY, robotDirection } =  this.state;
+    const {robotPosX, robotPosY, robotDirection, shouldPlace } =  this.state;
     return(
       <main>
         <select name = "robotPosX" id = "robotPosX" value = { this.robotPosX } onBlur = { (e) => this.handlePositionBlur(e.target) }>
@@ -42,9 +47,11 @@ class Board extends Component{
           <option value = "west">west</option>
           <option value = "east">east</option>
         </select>
-        <button>place</button>
+        <button onClick = { () => this.handlePlaceClick() }>place</button>
         <div>
-        position: ({robotPosX}, {robotPosY}) facing: ({robotDirection})
+          {
+            shouldPlace &&  `position: (${robotPosX}, ${robotPosY}) facing: (${robotDirection})`
+          }
         </div>
       </main>
     );
