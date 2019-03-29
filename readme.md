@@ -30,6 +30,10 @@
 - [ ] run jest
   - add unit test to components
 
+- [ ] add flow
+
+- [ ] Add proptypes
+
 
 ## Resources:
 - https://reactjs.org/docs/accessibility.html
