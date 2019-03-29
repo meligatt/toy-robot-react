@@ -1,5 +1,7 @@
 import './Board.scss';
 import React, { Component } from 'react';
+// import Grid from './Grid';
+import Tile from './Tile';
 
 class Board extends Component{
   constructor(props) {
@@ -14,7 +16,7 @@ class Board extends Component{
     };
   }
   handlePositionBlur({id, value}) {
-    this.setState({[id]: value});
+    this.setState({[id]: parseInt(value, 10)});
   }
   handleDirectionBlur({value}) {
     this.setState({robotDirection: value});
@@ -28,18 +30,18 @@ class Board extends Component{
     return(
       <main>
         <select name = "robotPosX" id = "robotPosX" value = { this.robotPosX } onBlur = { (e) => this.handlePositionBlur(e.target) }>
-          <option value = "1">1</option>
-          <option value = "2">2</option>
-          <option value = "3">3</option>
-          <option value = "4">4</option>
-          <option value = "5">5</option>
+          <option value = "0">1</option>
+          <option value = "1">2</option>
+          <option value = "2">3</option>
+          <option value = "3">4</option>
+          <option value = "4">5</option>
         </select>
         <select name = "robotPosY" id = "robotPosY" value = { this.robotPosY } onBlur = { (e) => this.handlePositionBlur(e.target) }>
-          <option value = "1">1</option>
-          <option value = "2">2</option>
-          <option value = "3">3</option>
-          <option value = "4">4</option>
-          <option value = "5">5</option>
+          <option value = "0">1</option>
+          <option value = "1">2</option>
+          <option value = "2">3</option>
+          <option value = "3">4</option>
+          <option value = "4">5</option>
         </select>
         <select name = "robotDirection" id = "robotDirection" value = { this.robotDirection } onBlur = { (e) => this.handleDirectionBlur(e.target) }>
           <option value = "north">north</option>
@@ -49,9 +51,22 @@ class Board extends Component{
         </select>
         <button onClick = { () => this.handlePlaceClick() }>place</button>
         <div>
-          {
-            shouldPlace &&  `position: (${robotPosX}, ${robotPosY}) facing: (${robotDirection})`
-          }
+          {/* <Grid shouldPlace = { shouldPlace } x = { robotPosX } y = { robotPosY } d = { robotDirection } /> */}
+
+          <div className = "flex-grid-fifth"  style = { {border:'1px solid blue'} }>
+            { shouldPlace &&
+              Array(this.state.boardWidth).fill(1).map((item, index) => {
+                console.log(typeof robotPosX, typeof index);
+                console.log(robotPosX === index);
+                
+                if (robotPosX === index){
+                  return <Tile key = { index } id = { index } show = { true } x = { robotPosX } y = { robotPosY } direction = { robotDirection }/>;
+                } else {
+                  return <Tile key = { index } id = { index } show = { false }/>;
+                }            
+              })
+            }
+          </div>
         </div>
       </main>
     );
