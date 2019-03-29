@@ -4,6 +4,9 @@
 - go to `http://localhost:8080/`
 
 ## To do:
+- [x] solution design:
+  - https://docs.google.com/drawings/d/1VezqjirjsqOubcS_Lo96JGqXnkjOS03mGT7wOLV4OzU/edit?usp=sharing
+
 - [x] React components:
   - ...
   - ...
