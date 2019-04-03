@@ -1,16 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Tile = ({
-  id,
   show,
-  x,
-  y,
   direction
 }) => {
   return(
-    <div id = { id } className = "col" style = { {border:'1px solid red'} }>
-      { show ? <span>robot</span> : <span>no robot</span>}
+    <div className = "col" style = { {border:'1px solid red'} }>
+      { show ? <div>robot facing {direction} </div> : <div>no robot</div>}
     </div>
   );
 };
+
+Tile.propTypes = {
+  show:PropTypes.bool,
+  direction:PropTypes.string
+};
+
 export default Tile;
+
