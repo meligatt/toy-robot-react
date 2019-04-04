@@ -1,11 +1,16 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
+import Nav from './Nav';
+import Board from './Board';
+import Footer from './Footer';
 
-class App extends Component{
-  render() {
-    return(
-      <div>Toy robot app</div>
-    );
-  }
-}
+const App = () => {
+  return(
+    <Fragment>
+      <Nav />
+      <Board />
+      <Footer />
+    </Fragment>
+  );
+};
 export default App;
 
