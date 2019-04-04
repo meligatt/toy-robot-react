@@ -49,7 +49,7 @@
 
 - [x] Add proptypes to components
 
-- [ ] Accessibility Resources:
+- [x] Accessibility Resources:
   - semantic HTML (use the correct html tags)
   - tab focus with logical order: page is navigable via keyboard.
   - aria-* HTML attributes: screen reader (voiceOver mac os) announce content.
