@@ -14,6 +14,7 @@ const Select = ({
       <label htmlFor = { id }>{ label }</label>
       <select name = { name } id = { id } value = { value } onBlur = { (e) => { onBlur(e); } }>
         {
+          options.length > 0 &&
           options.map((option, index) => <option key = { index } value = { option.value }>{ option.title }</option>)
         }
       </select>

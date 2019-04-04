@@ -21,6 +21,7 @@
   - tab focus with logical order: page is navigable via keyboard.
   - aria-* HTML attributes: screen reader (voiceOver mac os) announce content.
   - semantic HTML (use the correct html tags)
+  - https://www.w3.org/WAI/tutorials/forms/grouping/
 
 - [ ] Add Styles:
   - Add SASS mixins

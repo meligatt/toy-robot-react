@@ -7,7 +7,7 @@ const Tile = ({
 }) => {
   return(
     <div className = "col" style = { {border:'1px solid red'} }>
-      { show ? <div>robot facing {direction} </div> : <div>no robot</div>}
+      { show ? <div>robot facing {direction}</div> : <div>no robot</div>}
     </div>
   );
 };

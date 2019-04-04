@@ -10,6 +10,11 @@
   },
   "author": "meligatt",
   "license": "ISC",
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>src/utils/setupTests.js"
+    ]
+  },
   "dependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
@@ -21,6 +26,8 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
     "css-loader": "^2.1.1",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.11.2",
     "eslint": "^5.15.1",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",

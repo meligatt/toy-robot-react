@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import Nav from './Nav';
 import Board from './Board';
+import Footer from './Footer';
 
 const App = () => {
   return(
-    <div style = { {border: '1px solid blue'} }>
+    <Fragment>
+      <Nav />
       <Board />
-    </div>
+      <Footer />
+    </Fragment>
   );
 };
 export default App;

@@ -1,24 +1,26 @@
-import './Board.scss';
+import './index.scss';
 import React, { Component } from 'react';
-import Tile from './Tile';
-import Select from './select';
-import Button from './button';
+import Tile from '../Tile';
+import Select from '../Select';
+import Button from '../Button';
+import Alert from '../Alert';
+import FieldSet from '../FieldSet';
 
 const BOARD_WIDTH = 5;
 const BOARD_HEIGHT = 5;
-const boardPositionOptions = [
+const BOARD_COORDINATES_OPTIONS = [
   {title:'1', value:0},
   {title:'2', value:1},
   {title:'3', value:2},
   {title:'4', value:3},
   {title:'5', value:4}
 ];
-const directionOptions = [
+const BOARD_DIRECTIONS = [
   {title:'right', value:'RIGHT'},
   {title:'left', value:'LEFT' },
 ];
 
-const robotFacingOptions = [
+const ROBOT_ROTATION_OPTIONS = [
   { title:'north', value:'NORTH' },
   { title:'south', value:'SOUTH' },
   { title:'east', value:'EAST' },
@@ -52,14 +54,15 @@ class Board extends Component{
           LEFT: 'SOUTH',
         },
       }, 
-      shouldReport: false
+      shouldReport: false,
+      reportMessage: null
     };
   }
   handlePositionBlur(event) {
     const id = event.target.id;
-    const value = event.target.value;
+    const value = parseInt(event.target.value, 10);
     this.setState({
-      [id]: parseInt(value, 10),
+      [id]: value,
       shouldPlace: false
     });
   }
@@ -87,7 +90,15 @@ class Board extends Component{
     console.log('------------------------------------');
   }
   handleReportClick() {
-    this.setState({ shouldReport: true });
+    const newReportMessage = `report: (x,y): 
+      ${this.state.robotPosX + 1}, 
+      ${this.state.robotPosY + 1} 
+      - facing: ${this.state.robotDirection}`;
+
+    this.setState({ 
+      shouldReport: true,
+      reportMessage: newReportMessage
+    });
   }
   renderColumn(column, index, robotPosY, robotPosX, robotDirection) {
     return (
@@ -115,50 +126,51 @@ class Board extends Component{
     );
   }
   render() {
-    const {robotPosX, robotPosY, robotDirection, shouldPlace, board, shouldReport} =  this.state;
+    const {robotPosX, robotPosY, robotDirection, shouldPlace, board, shouldReport, reportMessage} =  this.state;
     return(
       <main>
-        <div style = { {border: '1px solid pink', padding: '8px'} }>
-          <Select 
+        <FieldSet legend = "Robot placement">
+          <Select
             label = "position x"
             name = "robotPosX"
             id = "robotPosX"
             value = { this.robotPosX }
-            options = { boardPositionOptions }
-            onBlur = { (e) => this.handlePositionBlur(e) }/>
-          <Select 
+            options = { BOARD_COORDINATES_OPTIONS }
+            onBlur = { (e) => this.handlePositionBlur(e) } />
+          <Select
             label = "position y"
             name = "robotPosY"
             id = "robotPosY"
             value = { this.robotPosY }
-            options = { boardPositionOptions }
-            onBlur = { (e) => this.handlePositionBlur(e) }/>
-          <Select 
+            options = { BOARD_COORDINATES_OPTIONS }
+            onBlur = { (e) => this.handlePositionBlur(e) } />
+          <Select
             label = "Facing"
             name = "robotDirection"
             id = "robotDirection"
             value = { this.robotDirection }
-            options = { robotFacingOptions }
-            onBlur = { (e) => this.handleDirectionBlur(e) }/>
-          <Button onClick = { () => this.handlePlaceClick() } label = "Place" />
-        </div>
+            options = { ROBOT_ROTATION_OPTIONS }
+            onBlur = { (e) => this.handleDirectionBlur(e) } />
+          <Button onClick = { () => this.handlePlaceClick() } label = "Place"/>
+        </FieldSet>
         
-        <div style = { {border: '1px solid green', padding: '8px'} }>
+        <FieldSet legend = "Robot movement">
           <Select
             label = "Turn"
             name = "robotTurn"
             id = "robotTurn"
             value = { this.robotDirection }
-            options = { directionOptions }
-            onBlur = { (e) => this.handleTurnBlur(e) }/>
+            options = { BOARD_DIRECTIONS }
+            onBlur = { (e) => this.handleTurnBlur(e) } />
           <Button onClick = { () => this.handleMoveClick() } label = "move forward" />
-        </div>
-        <div style = { {border: '1px solid green', padding: '8px'} }>
-          <Button onClick = { () => this.handleReportClick() } label = "Report" />
-        </div>
+        </FieldSet>
+        
+        <FieldSet legend = "Report">
+          <Button onClick = { () => this.handleReportClick() } label = "Generate report" />
+        </FieldSet>
         
         <div className = "flex-grid-fifth">
-          { shouldPlace &&
+          { shouldPlace && board.length > 0 &&
               board.map((column, index) => {
                 if (robotPosX === index){
                   return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection);
@@ -168,11 +180,9 @@ class Board extends Component{
               })
           }
         </div>
-        <div>
-          {
-            shouldReport && `report: (x,y): ${this.state.robotPosX + 1}, ${this.state.robotPosY + 1} - facing: ${this.state.robotDirection}`
-          }
-        </div>
+         
+        { shouldReport && <Alert text = { reportMessage }/> }
+         
       </main>
     );
   }
