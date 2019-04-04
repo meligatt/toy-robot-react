@@ -7,24 +7,27 @@ import Alert from '../Alert';
 import FieldSet from '../FieldSet';
 
 const BOARD_WIDTH = 5;
+
 const BOARD_HEIGHT = 5;
+
 const BOARD_COORDINATES_OPTIONS = [
-  {title:'1', value:0},
-  {title:'2', value:1},
-  {title:'3', value:2},
-  {title:'4', value:3},
-  {title:'5', value:4}
+  {title:'0', value:0},
+  {title:'1', value:1},
+  {title:'2', value:2},
+  {title:'3', value:3},
+  {title:'4', value:5}
 ];
+
 const BOARD_DIRECTIONS = [
   {title:'right', value:'RIGHT'},
-  {title:'left', value:'LEFT' },
+  {title:'left', value:'LEFT'},
 ];
 
 const ROBOT_ROTATION_OPTIONS = [
-  { title:'north', value:'NORTH' },
-  { title:'south', value:'SOUTH' },
-  { title:'east', value:'EAST' },
-  { title:'west', value:'WEST' }
+  {title:'north', value:'NORTH'},
+  {title:'south', value:'SOUTH'},
+  {title:'east', value:'EAST'},
+  {title:'west', value:'WEST'}
 ];
 
 class Board extends Component{
@@ -35,7 +38,7 @@ class Board extends Component{
       robotPosX: 0,
       robotPosY: 0,
       shouldPlace: false,
-      robotDirection: 'NORTH',
+      robotDirection: 'SOUTH',
       robotDirectionMap: {
         NORTH: {
           RIGHT: 'EAST',
@@ -61,6 +64,10 @@ class Board extends Component{
   handlePositionBlur(event) {
     const id = event.target.id;
     const value = parseInt(event.target.value, 10);
+    // const title = event.target
+    // const element = event.target;
+    // const text = element.options[element.selectedIndex].text;
+    // console.log(text);
     this.setState({
       [id]: value,
       shouldPlace: false
@@ -75,6 +82,8 @@ class Board extends Component{
   }
   handlePlaceClick() {
     this.setState({
+      robotPosX: this.state.robotPosX,
+      robotPosY: this.state.robotPosY,
       shouldPlace: true
     });
   }
@@ -85,9 +94,33 @@ class Board extends Component{
     this.setState({robotDirection: newRobotDirection });
   }
   handleMoveClick() {
-    console.log('------------------------------------');
+    // check current x,y
     console.log('handleMoveClick');
-    console.log('------------------------------------');
+    // check current direction
+    const direction = this.state.robotDirection;
+
+    // check if is placed
+
+    switch (direction){
+    case 'NORTH':
+      // this.y = this.y + 1;
+      this.setState({robotPosY: this.state.robotPosY + 1});
+      break;
+    case 'EAST':
+      // this.x = this.x + 1;
+      this.setState({robotPosX: this.state.robotPosX + 1});
+      break;
+    case 'SOUTH':
+      // this.y = this.y - 1;
+      this.setState({robotPosY: this.state.robotPosY - 1});
+      break;
+    case 'WEST':
+      // this.x = this.x - 1;
+      this.setState({robotPosX: this.state.robotPosX - 1});
+      break;
+    default:
+      throw new Error('Not valid direction');
+    } 
   }
   handleReportClick() {
     const newReportMessage = `report: (x,y): 
@@ -102,10 +135,10 @@ class Board extends Component{
   }
   renderColumn(column, index, robotPosY, robotPosX, robotDirection) {
     return (
-      <div key = { index } style = { {border:'1px solid blue'} }>
+      <div key = { index } style = { {transform: 'rotate(180deg)'} }>
         {
           column.map((_, index) => {
-            if (robotPosY === index){
+            if (robotPosY  === index){
               return <Tile key = { index } show = { true } direction = { robotDirection } />;
             } else {
               return <Tile key = { index } show = { false } />;
@@ -117,7 +150,7 @@ class Board extends Component{
   }
   renderEmptyColumn(column, index) {
     return (
-      <div key = { index } style = { {border:'1px solid blue'} }>
+      <div key = { index }>
         {
           column.map((_, index) => <Tile key = { index } id = { index } show = { false }/>
           )
@@ -172,7 +205,7 @@ class Board extends Component{
         <div className = "flex-grid-fifth">
           { shouldPlace && board.length > 0 &&
               board.map((column, index) => {
-                if (robotPosX === index){
+                if (robotPosX  === index){
                   return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection);
                 } else {
                   return this.renderEmptyColumn(column, index);

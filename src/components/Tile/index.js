@@ -1,3 +1,4 @@
+import './index.scss';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,8 +7,12 @@ const Tile = ({
   direction
 }) => {
   return(
-    <div className = "col" style = { {border:'1px solid red'} }>
-      { show ? <div>robot facing {direction}</div> : <div>no robot</div>}
+    <div className = "col ">
+      { show ? 
+        <div className = { `tile tile--full tile-full--facing-${direction.toLowerCase()}` } /> 
+        : 
+        <div className = "tile" />
+      }
     </div>
   );
 };

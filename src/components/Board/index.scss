@@ -12,15 +12,12 @@
 }
 
 .col {
-  padding: 5px;
-  min-height: 100px;
   width: 100%;
-  border: 1px dotted #CCC;
 }
 
 .flex-grid-fifth {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .flex-grid-fifth .col {
