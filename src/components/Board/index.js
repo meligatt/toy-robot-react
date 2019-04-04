@@ -20,7 +20,7 @@ const BOARD_COORDINATES_OPTIONS = [
   {title:'1', value:1},
   {title:'2', value:2},
   {title:'3', value:3},
-  {title:'4', value:5}
+  {title:'4', value:4}
 ];
 
 const BOARD_DIRECTIONS_OPTIONS = [
