@@ -24,8 +24,8 @@ const BOARD_DIRECTIONS = [
 ];
 
 const ROBOT_ROTATION_OPTIONS = [
-  {title:'north', value:'NORTH'},
   {title:'south', value:'SOUTH'},
+  {title:'north', value:'NORTH'},
   {title:'east', value:'EAST'},
   {title:'west', value:'WEST'}
 ];
@@ -37,8 +37,8 @@ class Board extends Component{
       board: new Array(BOARD_WIDTH).fill(0).map(() => new Array(BOARD_HEIGHT).fill(0)),
       robotPosX: 0,
       robotPosY: 0,
-      shouldPlace: false,
       robotDirection: 'SOUTH',
+      shouldPlace: false,
       robotDirectionMap: {
         NORTH: {
           RIGHT: 'EAST',
@@ -56,7 +56,7 @@ class Board extends Component{
           RIGHT: 'NORTH',
           LEFT: 'SOUTH',
         },
-      }, 
+      },
       shouldReport: false,
       reportMessage: null
     };
@@ -64,10 +64,6 @@ class Board extends Component{
   handlePositionBlur(event) {
     const id = event.target.id;
     const value = parseInt(event.target.value, 10);
-    // const title = event.target
-    // const element = event.target;
-    // const text = element.options[element.selectedIndex].text;
-    // console.log(text);
     this.setState({
       [id]: value,
       shouldPlace: false
@@ -84,6 +80,7 @@ class Board extends Component{
     this.setState({
       robotPosX: this.state.robotPosX,
       robotPosY: this.state.robotPosY,
+      robotDirection: this.state.robotDirection,
       shouldPlace: true
     });
   }
@@ -94,41 +91,34 @@ class Board extends Component{
     this.setState({robotDirection: newRobotDirection });
   }
   handleMoveClick() {
-    // check current x,y
-    console.log('handleMoveClick');
-    // check current direction
     const direction = this.state.robotDirection;
-
-    // check if is placed
-
     switch (direction){
     case 'NORTH':
-      // this.y = this.y + 1;
       this.setState({robotPosY: this.state.robotPosY + 1});
       break;
     case 'EAST':
-      // this.x = this.x + 1;
       this.setState({robotPosX: this.state.robotPosX + 1});
       break;
     case 'SOUTH':
-      // this.y = this.y - 1;
       this.setState({robotPosY: this.state.robotPosY - 1});
       break;
     case 'WEST':
-      // this.x = this.x - 1;
       this.setState({robotPosX: this.state.robotPosX - 1});
       break;
     default:
       throw new Error('Not valid direction');
-    } 
+    }
   }
   handleReportClick() {
-    const newReportMessage = `report: (x,y): 
-      ${this.state.robotPosX + 1}, 
-      ${this.state.robotPosY + 1} 
+    if (!this.state.shouldPlace){
+      return;
+    }
+    const newReportMessage = `report: (x,y):
+      ${this.state.robotPosX},
+      ${this.state.robotPosY}
       - facing: ${this.state.robotDirection}`;
 
-    this.setState({ 
+    this.setState({
       shouldReport: true,
       reportMessage: newReportMessage
     });
@@ -186,7 +176,7 @@ class Board extends Component{
             onBlur = { (e) => this.handleDirectionBlur(e) } />
           <Button onClick = { () => this.handlePlaceClick() } label = "Place"/>
         </FieldSet>
-        
+
         <FieldSet legend = "Robot movement">
           <Select
             label = "Turn"
@@ -197,11 +187,11 @@ class Board extends Component{
             onBlur = { (e) => this.handleTurnBlur(e) } />
           <Button onClick = { () => this.handleMoveClick() } label = "move forward" />
         </FieldSet>
-        
+
         <FieldSet legend = "Report">
           <Button onClick = { () => this.handleReportClick() } label = "Generate report" />
         </FieldSet>
-        
+
         <div className = "flex-grid-fifth">
           { shouldPlace && board.length > 0 &&
               board.map((column, index) => {
@@ -213,9 +203,9 @@ class Board extends Component{
               })
           }
         </div>
-         
+
         { shouldReport && <Alert text = { reportMessage }/> }
-         
+
       </main>
     );
   }
