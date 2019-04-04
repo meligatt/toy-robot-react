@@ -1,0 +1,20 @@
+@import 'src/styles/abstracts/functions/_get-color';
+
+.nav__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 90px;
+  background: getColor(white);
+  box-shadow: 0 2px 3px 0 getColor(blackShadow);
+  padding: 0 20px;
+}
+
+.nav__logo {
+  display: inline-block;
+  border: 2px solid getColor(blue);
+  font-size: 1.5rem;
+  color: getColor(blue);
+  text-decoration: none;
+  padding: 0.5rem;
+}

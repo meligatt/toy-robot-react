@@ -1,6 +1,9 @@
+@import 'src/styles/abstracts/functions/_get-color';
+@import 'src/styles/abstracts/mixins/_breakpoint';
+
 .tile {
-  background-color: #112c3d;
-  border: 1px dotted #65acb6;
+  background-color: getColor(blue);
+  border: 1px dotted getColor(sky);
   height: 100px;
   min-width: 100px;
 }
@@ -24,4 +27,11 @@
 
 .tile-full--facing-west {
   transform: rotate(90deg);
+}
+
+@include breakpoint($mobile) {
+  .tile {
+    height: 60px;
+    min-width: 60px;
+  }
 }

@@ -1,8 +1,9 @@
+import './index.scss';
 import React from 'react';
 
 const Footer = () => {
   return(
-    <footer className = "footer">
+    <footer>
       <div className = "footer__container">
         <div className = "footer__author">
           <span>React Toy robot - 2019 by Melissa Gattoni.</span>
