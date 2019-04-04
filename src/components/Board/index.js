@@ -7,8 +7,13 @@ import Alert from '../Alert';
 import FieldSet from '../FieldSet';
 
 const BOARD_WIDTH = 5;
-
 const BOARD_HEIGHT = 5;
+
+const MAX_Y_COORDINATE = BOARD_HEIGHT - 1;
+const MIN_Y_COORDINATE = 0;
+
+const MAX_X_COORDINATE = BOARD_WIDTH - 1;
+const MIN_X_COORDINATE = 0;
 
 const BOARD_COORDINATES_OPTIONS = [
   {title:'0', value:0},
@@ -18,7 +23,7 @@ const BOARD_COORDINATES_OPTIONS = [
   {title:'4', value:5}
 ];
 
-const BOARD_DIRECTIONS = [
+const BOARD_DIRECTIONS_OPTIONS = [
   {title:'right', value:'RIGHT'},
   {title:'left', value:'LEFT'},
 ];
@@ -30,33 +35,35 @@ const ROBOT_ROTATION_OPTIONS = [
   {title:'west', value:'WEST'}
 ];
 
+const ROBOT_DIRECTION_MAP = {
+  NORTH: {
+    RIGHT: 'EAST',
+    LEFT: 'WEST',
+  },
+  EAST: {
+    RIGHT: 'SOUTH',
+    LEFT: 'NORTH',
+  },
+  SOUTH: {
+    RIGHT: 'WEST',
+    LEFT: 'EAST',
+  },
+  WEST: {
+    RIGHT: 'NORTH',
+    LEFT: 'SOUTH',
+  },
+};
+
+const BOARD_MATRIX = new Array(BOARD_WIDTH).fill(0).map(() => new Array(BOARD_HEIGHT).fill(0));
+
 class Board extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      board: new Array(BOARD_WIDTH).fill(0).map(() => new Array(BOARD_HEIGHT).fill(0)),
       robotPosX: 0,
       robotPosY: 0,
       robotDirection: 'SOUTH',
       shouldPlace: false,
-      robotDirectionMap: {
-        NORTH: {
-          RIGHT: 'EAST',
-          LEFT: 'WEST',
-        },
-        EAST: {
-          RIGHT: 'SOUTH',
-          LEFT: 'NORTH',
-        },
-        SOUTH: {
-          RIGHT: 'WEST',
-          LEFT: 'EAST',
-        },
-        WEST: {
-          RIGHT: 'NORTH',
-          LEFT: 'SOUTH',
-        },
-      },
       shouldReport: false,
       reportMessage: null
     };
@@ -88,7 +95,7 @@ class Board extends Component{
   handleTurnBlur(event) {
     const turnValue = event.target.value;
     const currentRobotDirection = this.state.robotDirection;
-    const newRobotDirection = this.state.robotDirectionMap[currentRobotDirection][turnValue];
+    const newRobotDirection = ROBOT_DIRECTION_MAP[currentRobotDirection][turnValue];
     this.setState({
       robotDirection: newRobotDirection,
       shouldReport: false,
@@ -99,25 +106,25 @@ class Board extends Component{
     switch (direction){
     case 'NORTH':
       this.setState({
-        robotPosY: this.state.robotPosY + 1,
+        robotPosY: (this.state.robotPosY < MAX_Y_COORDINATE) ? this.state.robotPosY + 1 : this.state.robotPosY,
         shouldReport: false
       });
       break;
     case 'EAST':
       this.setState({
-        robotPosX: this.state.robotPosX + 1,
+        robotPosX: (this.state.robotPosX < MAX_X_COORDINATE) ? this.state.robotPosX + 1 : this.state.robotPosX,
         shouldReport: false
       });
       break;
     case 'SOUTH':
       this.setState({
-        robotPosY: this.state.robotPosY - 1,
+        robotPosY: (this.state.robotPosY > MIN_Y_COORDINATE) ? this.state.robotPosY - 1 : this.state.robotPosY,
         shouldReport: false
       });
       break;
     case 'WEST':
       this.setState({
-        robotPosX: this.state.robotPosX - 1,
+        robotPosX: (this.state.robotPosX > MIN_X_COORDINATE) ? this.state.robotPosX - 1 : this.state.robotPosX,
         shouldReport: false
       });
       break;
@@ -164,7 +171,7 @@ class Board extends Component{
     );
   }
   render() {
-    const {robotPosX, robotPosY, robotDirection, shouldPlace, board, shouldReport, reportMessage} =  this.state;
+    const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage} =  this.state;
     return(
       <main>
         <FieldSet legend = "Robot placement">
@@ -198,7 +205,7 @@ class Board extends Component{
             name = "robotTurn"
             id = "robotTurn"
             value = { this.robotDirection }
-            options = { BOARD_DIRECTIONS }
+            options = { BOARD_DIRECTIONS_OPTIONS }
             onBlur = { (e) => this.handleTurnBlur(e) } />
           <Button onClick = { () => this.handleMoveClick() } label = "move forward" />
         </FieldSet>
@@ -208,8 +215,8 @@ class Board extends Component{
         </FieldSet>
 
         <div className = "flex-grid-fifth">
-          { shouldPlace && board.length > 0 &&
-              board.map((column, index) => {
+          { shouldPlace && BOARD_MATRIX.length > 0 &&
+              BOARD_MATRIX.map((column, index) => {
                 if (robotPosX  === index){
                   return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection);
                 } else {
