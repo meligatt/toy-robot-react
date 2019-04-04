@@ -6,7 +6,7 @@ const Alert = ({
   text
 }) => {
   return(
-    <div className = "alert__text">
+    <div className = "alert__text" role = "alert">
       { text }
     </div>
   );

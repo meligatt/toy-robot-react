@@ -7,7 +7,7 @@ const Tile = ({
   direction
 }) => {
   return(
-    <div className = "col">
+    <div className = "col" role = "cell">
       { show ?
         <div className = { `tile tile--full tile-full--facing-${direction.toLowerCase()}` } />
         :

@@ -23,11 +23,6 @@ const BOARD_COORDINATES_OPTIONS = [
   {title:'4', value:4}
 ];
 
-// const BOARD_DIRECTIONS_OPTIONS = [
-//   {title:'right', value:'RIGHT'},
-//   {title:'left', value:'LEFT'},
-// ];
-
 const ROBOT_ROTATION_OPTIONS = [
   {title:'south', value:'SOUTH'},
   {title:'north', value:'NORTH'},
@@ -145,7 +140,7 @@ class Board extends Component{
   }
   renderColumn(column, index, robotPosY, robotPosX, robotDirection) {
     return (
-      <div key = { index } style = { {transform: 'rotate(180deg)'} }>
+      <div key = { index } style = { {transform: 'rotate(180deg)'} } role = "row">
         {
           column.map((_, index) => {
             if (robotPosY  === index){
@@ -160,18 +155,21 @@ class Board extends Component{
   }
   renderEmptyColumn(column, index) {
     return (
-      <div key = { index }>
+      <div key = { index } role = "row">
         {
           column.map((_, index) => <Tile key = { index } id = { index } show = { false }/>)
         }
       </div>
     );
   }
+  renderEmptyGrid() {
+    return BOARD_MATRIX.map((column, index) => this.renderEmptyColumn(column, index));
+  }
   render() {
     const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage} =  this.state;
     return(
       <main className = "board-main">
-        <div className = "flex-grid board-main__searchbar">
+        <div className = "flex-grid board-main__searchbar" role = "search">
           <FieldSet legend = "Place">
             <Select
               label = "position x"
@@ -207,8 +205,10 @@ class Board extends Component{
             <Button onClick = { () => this.handleReportClick() } label = "Generate report" />
           </FieldSet>
         </div>
+        <h2 id = "grid-title" className = "board-main__subtitle">Robot grid</h2>
+        <div className = "flex-grid-fifth" role = "grid" aria-labelledby = "grid-title">
+          { !shouldPlace && BOARD_MATRIX.length > 0 && this.renderEmptyGrid() }
 
-        <div className = "flex-grid-fifth">
           { shouldPlace && BOARD_MATRIX.length > 0 &&
               BOARD_MATRIX.map((column, index) => {
                 if (robotPosX  === index){
@@ -219,9 +219,7 @@ class Board extends Component{
               })
           }
         </div>
-
         { shouldReport && <Alert text = { reportMessage }/> }
-
       </main>
     );
   }

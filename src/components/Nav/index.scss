@@ -1,11 +1,12 @@
 @import 'src/styles/abstracts/functions/_get-color';
+@import 'src/styles/abstracts/mixins/_breakpoint';
 
 .nav__container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 90px;
-  background: getColor(white);
+  height: 70px;
+  background-color: getColor(white);
   box-shadow: 0 2px 3px 0 getColor(blackShadow);
   padding: 0 20px;
 }
@@ -13,8 +14,18 @@
 .nav__logo {
   display: inline-block;
   border: 2px solid getColor(blue);
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: getColor(blue);
   text-decoration: none;
   padding: 0.5rem;
+}
+
+@include breakpoint($mobile) {
+  .nav__container {
+    height: 50px;
+  }
+
+  .nav__logo {
+    font-size: 0.8rem;
+  }
 }

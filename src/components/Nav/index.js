@@ -4,7 +4,7 @@ import React from 'react';
 const Nav = () => {
   return(
     <nav className = "nav__container">
-      <div className = "nav__logo" to = "/"> Toy Robot </div>
+      <h1 className = "nav__logo" to = "/" > Toy robot application </h1>
     </nav>
   );};
 

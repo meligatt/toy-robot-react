@@ -1,4 +1,6 @@
 @import 'src/styles/abstracts/variables/_gutter';
+@import 'src/styles/abstracts/functions/_get-color';
+@import 'src/styles/abstracts/mixins/_breakpoint';
 
 .board-main {
   padding: $gutter 0;
@@ -10,6 +12,11 @@
 
 .board-main__searchbar {
   padding: $gutter 0;
+}
+
+.board-main__subtitle {
+  font-size: 0.99rem;
+  color: getColor(SanMarino);
 }
 
 .flex-grid {
@@ -31,4 +38,10 @@
 
 .flex-grid-fifth .col {
   width: 20%;
+}
+
+@include breakpoint($mobile) {
+  .board-main__searchbar {
+    flex-direction: column;
+  }
 }

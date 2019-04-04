@@ -11,6 +11,7 @@ const Button = ({
     <button
       className = "button"
       value = { value }
+      aria-label = { label }
       onClick = { (e) => onClick(e) }>
       { label }
     </button>
