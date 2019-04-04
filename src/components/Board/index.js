@@ -8,52 +8,62 @@ import FieldSet from '../FieldSet';
 
 const BOARD_WIDTH = 5;
 const BOARD_HEIGHT = 5;
+
+const MAX_Y_COORDINATE = BOARD_HEIGHT - 1;
+const MIN_Y_COORDINATE = 0;
+
+const MAX_X_COORDINATE = BOARD_WIDTH - 1;
+const MIN_X_COORDINATE = 0;
+
 const BOARD_COORDINATES_OPTIONS = [
-  {title:'1', value:0},
-  {title:'2', value:1},
-  {title:'3', value:2},
-  {title:'4', value:3},
-  {title:'5', value:4}
+  {title:'0', value:0},
+  {title:'1', value:1},
+  {title:'2', value:2},
+  {title:'3', value:3},
+  {title:'4', value:4}
 ];
-const BOARD_DIRECTIONS = [
+
+const BOARD_DIRECTIONS_OPTIONS = [
   {title:'right', value:'RIGHT'},
-  {title:'left', value:'LEFT' },
+  {title:'left', value:'LEFT'},
 ];
 
 const ROBOT_ROTATION_OPTIONS = [
-  { title:'north', value:'NORTH' },
-  { title:'south', value:'SOUTH' },
-  { title:'east', value:'EAST' },
-  { title:'west', value:'WEST' }
+  {title:'south', value:'SOUTH'},
+  {title:'north', value:'NORTH'},
+  {title:'east', value:'EAST'},
+  {title:'west', value:'WEST'}
 ];
+
+const ROBOT_DIRECTION_MAP = {
+  NORTH: {
+    RIGHT: 'EAST',
+    LEFT: 'WEST',
+  },
+  EAST: {
+    RIGHT: 'SOUTH',
+    LEFT: 'NORTH',
+  },
+  SOUTH: {
+    RIGHT: 'WEST',
+    LEFT: 'EAST',
+  },
+  WEST: {
+    RIGHT: 'NORTH',
+    LEFT: 'SOUTH',
+  },
+};
+
+const BOARD_MATRIX = new Array(BOARD_WIDTH).fill(0).map(() => new Array(BOARD_HEIGHT).fill(0));
 
 class Board extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      board: new Array(BOARD_WIDTH).fill(0).map(() => new Array(BOARD_HEIGHT).fill(0)),
       robotPosX: 0,
       robotPosY: 0,
+      robotDirection: 'SOUTH',
       shouldPlace: false,
-      robotDirection: 'NORTH',
-      robotDirectionMap: {
-        NORTH: {
-          RIGHT: 'EAST',
-          LEFT: 'WEST',
-        },
-        EAST: {
-          RIGHT: 'SOUTH',
-          LEFT: 'NORTH',
-        },
-        SOUTH: {
-          RIGHT: 'WEST',
-          LEFT: 'EAST',
-        },
-        WEST: {
-          RIGHT: 'NORTH',
-          LEFT: 'SOUTH',
-        },
-      }, 
       shouldReport: false,
       reportMessage: null
     };
@@ -75,37 +85,73 @@ class Board extends Component{
   }
   handlePlaceClick() {
     this.setState({
-      shouldPlace: true
+      robotPosX: this.state.robotPosX,
+      robotPosY: this.state.robotPosY,
+      robotDirection: this.state.robotDirection,
+      shouldPlace: true,
+      shouldReport: false,
     });
   }
   handleTurnBlur(event) {
     const turnValue = event.target.value;
     const currentRobotDirection = this.state.robotDirection;
-    const newRobotDirection = this.state.robotDirectionMap[currentRobotDirection][turnValue];
-    this.setState({robotDirection: newRobotDirection });
+    const newRobotDirection = ROBOT_DIRECTION_MAP[currentRobotDirection][turnValue];
+    this.setState({
+      robotDirection: newRobotDirection,
+      shouldReport: false,
+    });
   }
   handleMoveClick() {
-    console.log('------------------------------------');
-    console.log('handleMoveClick');
-    console.log('------------------------------------');
+    const direction = this.state.robotDirection;
+    switch (direction){
+    case 'NORTH':
+      this.setState({
+        robotPosY: (this.state.robotPosY < MAX_Y_COORDINATE) ? this.state.robotPosY + 1 : this.state.robotPosY,
+        shouldReport: false
+      });
+      break;
+    case 'EAST':
+      this.setState({
+        robotPosX: (this.state.robotPosX < MAX_X_COORDINATE) ? this.state.robotPosX + 1 : this.state.robotPosX,
+        shouldReport: false
+      });
+      break;
+    case 'SOUTH':
+      this.setState({
+        robotPosY: (this.state.robotPosY > MIN_Y_COORDINATE) ? this.state.robotPosY - 1 : this.state.robotPosY,
+        shouldReport: false
+      });
+      break;
+    case 'WEST':
+      this.setState({
+        robotPosX: (this.state.robotPosX > MIN_X_COORDINATE) ? this.state.robotPosX - 1 : this.state.robotPosX,
+        shouldReport: false
+      });
+      break;
+    default:
+      throw new Error('Not valid direction');
+    }
   }
   handleReportClick() {
-    const newReportMessage = `report: (x,y): 
-      ${this.state.robotPosX + 1}, 
-      ${this.state.robotPosY + 1} 
+    if (!this.state.shouldPlace){
+      return;
+    }
+    const newReportMessage = `report: (x,y):
+      ${this.state.robotPosX},
+      ${this.state.robotPosY}
       - facing: ${this.state.robotDirection}`;
 
-    this.setState({ 
+    this.setState({
       shouldReport: true,
       reportMessage: newReportMessage
     });
   }
   renderColumn(column, index, robotPosY, robotPosX, robotDirection) {
     return (
-      <div key = { index } style = { {border:'1px solid blue'} }>
+      <div key = { index } style = { {transform: 'rotate(180deg)'} }>
         {
           column.map((_, index) => {
-            if (robotPosY === index){
+            if (robotPosY  === index){
               return <Tile key = { index } show = { true } direction = { robotDirection } />;
             } else {
               return <Tile key = { index } show = { false } />;
@@ -117,16 +163,15 @@ class Board extends Component{
   }
   renderEmptyColumn(column, index) {
     return (
-      <div key = { index } style = { {border:'1px solid blue'} }>
+      <div key = { index }>
         {
-          column.map((_, index) => <Tile key = { index } id = { index } show = { false }/>
-          )
+          column.map((_, index) => <Tile key = { index } id = { index } show = { false }/>)
         }
       </div>
     );
   }
   render() {
-    const {robotPosX, robotPosY, robotDirection, shouldPlace, board, shouldReport, reportMessage} =  this.state;
+    const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage} =  this.state;
     return(
       <main>
         <FieldSet legend = "Robot placement">
@@ -153,26 +198,26 @@ class Board extends Component{
             onBlur = { (e) => this.handleDirectionBlur(e) } />
           <Button onClick = { () => this.handlePlaceClick() } label = "Place"/>
         </FieldSet>
-        
+
         <FieldSet legend = "Robot movement">
           <Select
             label = "Turn"
             name = "robotTurn"
             id = "robotTurn"
             value = { this.robotDirection }
-            options = { BOARD_DIRECTIONS }
+            options = { BOARD_DIRECTIONS_OPTIONS }
             onBlur = { (e) => this.handleTurnBlur(e) } />
           <Button onClick = { () => this.handleMoveClick() } label = "move forward" />
         </FieldSet>
-        
+
         <FieldSet legend = "Report">
           <Button onClick = { () => this.handleReportClick() } label = "Generate report" />
         </FieldSet>
-        
+
         <div className = "flex-grid-fifth">
-          { shouldPlace && board.length > 0 &&
-              board.map((column, index) => {
-                if (robotPosX === index){
+          { shouldPlace && BOARD_MATRIX.length > 0 &&
+              BOARD_MATRIX.map((column, index) => {
+                if (robotPosX  === index){
                   return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection);
                 } else {
                   return this.renderEmptyColumn(column, index);
@@ -180,9 +225,9 @@ class Board extends Component{
               })
           }
         </div>
-         
+
         { shouldReport && <Alert text = { reportMessage }/> }
-         
+
       </main>
     );
   }
