@@ -128,10 +128,9 @@ class Board extends Component{
     if (!this.state.shouldPlace){
       return;
     }
-    const newReportMessage = `report: (x,y):
-      ${this.state.robotPosX},
-      ${this.state.robotPosY}
-      - facing: ${this.state.robotDirection}`;
+    const newReportMessage = `
+    Robot is currently in position x: ${this.state.robotPosX},
+     position y: ${this.state.robotPosY}, facing: ${this.state.robotDirection}`;
 
     this.setState({
       shouldReport: true,
