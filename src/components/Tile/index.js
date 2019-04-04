@@ -7,10 +7,10 @@ const Tile = ({
   direction
 }) => {
   return(
-    <div className = "col ">
-      { show ? 
-        <div className = { `tile tile--full tile-full--facing-${direction.toLowerCase()}` } /> 
-        : 
+    <div className = "col">
+      { show ?
+        <div className = { `tile tile--full tile-full--facing-${direction.toLowerCase()}` } />
+        :
         <div className = "tile" />
       }
     </div>
