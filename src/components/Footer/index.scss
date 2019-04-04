@@ -1,0 +1,29 @@
+@import 'src/styles/abstracts/functions/_get-color';
+
+.footer__container {
+  font-size: 0.8rem;
+  height: 70px;
+  bottom: 0;
+  border-top: 1px solid getColor(silver);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.footer__author {
+  display: flex;
+  align-items: center;
+  color: getColor(black-60);
+  flex: 0 1 auto;
+}
+
+.footer__link-list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style: none;
+}
+
+.footer__list-item {
+  margin: 1rem;
+}

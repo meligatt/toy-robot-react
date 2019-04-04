@@ -173,7 +173,7 @@ class Board extends Component{
   render() {
     const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage} =  this.state;
     return(
-      <main>
+      <main className = "board-main">
         <FieldSet legend = "Robot placement">
           <Select
             label = "position x"
