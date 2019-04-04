@@ -81,29 +81,45 @@ class Board extends Component{
       robotPosX: this.state.robotPosX,
       robotPosY: this.state.robotPosY,
       robotDirection: this.state.robotDirection,
-      shouldPlace: true
+      shouldPlace: true,
+      shouldReport: false,
     });
   }
   handleTurnBlur(event) {
     const turnValue = event.target.value;
     const currentRobotDirection = this.state.robotDirection;
     const newRobotDirection = this.state.robotDirectionMap[currentRobotDirection][turnValue];
-    this.setState({robotDirection: newRobotDirection });
+    this.setState({
+      robotDirection: newRobotDirection,
+      shouldReport: false,
+    });
   }
   handleMoveClick() {
     const direction = this.state.robotDirection;
     switch (direction){
     case 'NORTH':
-      this.setState({robotPosY: this.state.robotPosY + 1});
+      this.setState({
+        robotPosY: this.state.robotPosY + 1,
+        shouldReport: false
+      });
       break;
     case 'EAST':
-      this.setState({robotPosX: this.state.robotPosX + 1});
+      this.setState({
+        robotPosX: this.state.robotPosX + 1,
+        shouldReport: false
+      });
       break;
     case 'SOUTH':
-      this.setState({robotPosY: this.state.robotPosY - 1});
+      this.setState({
+        robotPosY: this.state.robotPosY - 1,
+        shouldReport: false
+      });
       break;
     case 'WEST':
-      this.setState({robotPosX: this.state.robotPosX - 1});
+      this.setState({
+        robotPosX: this.state.robotPosX - 1,
+        shouldReport: false
+      });
       break;
     default:
       throw new Error('Not valid direction');
@@ -142,8 +158,7 @@ class Board extends Component{
     return (
       <div key = { index }>
         {
-          column.map((_, index) => <Tile key = { index } id = { index } show = { false }/>
-          )
+          column.map((_, index) => <Tile key = { index } id = { index } show = { false }/>)
         }
       </div>
     );
