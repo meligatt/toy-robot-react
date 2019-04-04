@@ -1,0 +1,34 @@
+@import 'src/styles/abstracts/variables/_gutter';
+@import 'src/styles/abstracts/functions/_get-color';
+@import 'src/styles/abstracts/mixins/_breakpoint';
+
+.button {
+  padding: $gutter;
+  margin: $gutter;
+  font-size: 1rem;
+  text-align: center;
+  text-transform: capitalize;
+  cursor: pointer;
+  color: getColor(black);
+  background-color: getColor(silver);
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 3px getColor(black-30);
+}
+
+.button:hover {
+  background-color: getColor(mercury);
+}
+
+.button:active {
+  background-color: getColor(mercury);
+  box-shadow: 0 2px getColor(black-30);
+  transform: translateY(4px);
+}
+
+@include breakpoint($mobile) {
+  .button {
+    margin: $gutter;
+    font-size: 0.9rem;
+  }
+}

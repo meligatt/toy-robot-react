@@ -4,15 +4,14 @@ import PropTypes from 'prop-types';
 const Select = ({
   label,
   name,
-  id,
   value,
   options,
   onBlur
 }) => {
   return(
     <Fragment>
-      <label htmlFor = { id }>{ label }</label>
-      <select name = { name } id = { id } value = { value } onBlur = { (e) => { onBlur(e); } }>
+      <label htmlFor = { name }>{ label }</label>
+      <select name = { name } id = { name } value = { value } onBlur = { (e) => { onBlur(e); } }>
         {
           options.length > 0 &&
           options.map((option, index) => <option key = { index } value = { option.value }>{ option.title }</option>)

@@ -1,10 +1,10 @@
 import './index.scss';
 import React, { Component } from 'react';
-import Tile from '../Tile';
-import Select from '../Select';
-import Button from '../Button';
-import Alert from '../Alert';
-import FieldSet from '../FieldSet';
+import Tile from '../../components/Tile';
+import Select from '../../components/Select';
+import Button from '../../components/Button';
+import Alert from '../../components/Alert';
+import FieldSet from '../../components/FieldSet';
 
 const BOARD_WIDTH = 5;
 const BOARD_HEIGHT = 5;
@@ -23,10 +23,10 @@ const BOARD_COORDINATES_OPTIONS = [
   {title:'4', value:4}
 ];
 
-const BOARD_DIRECTIONS_OPTIONS = [
-  {title:'right', value:'RIGHT'},
-  {title:'left', value:'LEFT'},
-];
+// const BOARD_DIRECTIONS_OPTIONS = [
+//   {title:'right', value:'RIGHT'},
+//   {title:'left', value:'LEFT'},
+// ];
 
 const ROBOT_ROTATION_OPTIONS = [
   {title:'south', value:'SOUTH'},
@@ -85,14 +85,11 @@ class Board extends Component{
   }
   handlePlaceClick() {
     this.setState({
-      robotPosX: this.state.robotPosX,
-      robotPosY: this.state.robotPosY,
-      robotDirection: this.state.robotDirection,
       shouldPlace: true,
       shouldReport: false,
     });
   }
-  handleTurnBlur(event) {
+  handleTurnClick(event) {
     const turnValue = event.target.value;
     const currentRobotDirection = this.state.robotDirection;
     const newRobotDirection = ROBOT_DIRECTION_MAP[currentRobotDirection][turnValue];
@@ -174,45 +171,42 @@ class Board extends Component{
     const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage} =  this.state;
     return(
       <main className = "board-main">
-        <FieldSet legend = "Robot placement">
-          <Select
-            label = "position x"
-            name = "robotPosX"
-            id = "robotPosX"
-            value = { this.robotPosX }
-            options = { BOARD_COORDINATES_OPTIONS }
-            onBlur = { (e) => this.handlePositionBlur(e) } />
-          <Select
-            label = "position y"
-            name = "robotPosY"
-            id = "robotPosY"
-            value = { this.robotPosY }
-            options = { BOARD_COORDINATES_OPTIONS }
-            onBlur = { (e) => this.handlePositionBlur(e) } />
-          <Select
-            label = "Facing"
-            name = "robotDirection"
-            id = "robotDirection"
-            value = { this.robotDirection }
-            options = { ROBOT_ROTATION_OPTIONS }
-            onBlur = { (e) => this.handleDirectionBlur(e) } />
-          <Button onClick = { () => this.handlePlaceClick() } label = "Place"/>
-        </FieldSet>
+        <div className = "flex-grid board-main__searchbar">
+          <FieldSet legend = "Place">
+            <Select
+              label = "position x"
+              name = "robotPosX"
+              value = { this.robotPosX }
+              options = { BOARD_COORDINATES_OPTIONS }
+              onBlur = { (e) => this.handlePositionBlur(e) } />
+            <Select
+              label = "position y"
+              name = "robotPosY"
+              value = { this.robotPosY }
+              options = { BOARD_COORDINATES_OPTIONS }
+              onBlur = { (e) => this.handlePositionBlur(e) } />
+            <Select
+              label = "Facing"
+              name = "robotDirection"
+              value = { this.robotDirection }
+              options = { ROBOT_ROTATION_OPTIONS }
+              onBlur = { (e) => this.handleDirectionBlur(e) } />
+            <Button onClick = { () => this.handlePlaceClick() } label = "Place"/>
+          </FieldSet>
 
-        <FieldSet legend = "Robot movement">
-          <Select
-            label = "Turn"
-            name = "robotTurn"
-            id = "robotTurn"
-            value = { this.robotDirection }
-            options = { BOARD_DIRECTIONS_OPTIONS }
-            onBlur = { (e) => this.handleTurnBlur(e) } />
-          <Button onClick = { () => this.handleMoveClick() } label = "move forward" />
-        </FieldSet>
+          <FieldSet legend = "Rotate">
+            <Button value = "RIGHT" onClick = { (e) => this.handleTurnClick(e) } label = "Right"/>
+            <Button value = "LEFT" onClick = { (e) => this.handleTurnClick(e) } label = "Left"/>
+          </FieldSet>
 
-        <FieldSet legend = "Report">
-          <Button onClick = { () => this.handleReportClick() } label = "Generate report" />
-        </FieldSet>
+          <FieldSet legend = "Move">
+            <Button onClick = { () => this.handleMoveClick() } label = "move forward" />
+          </FieldSet>
+
+          <FieldSet legend = "Report">
+            <Button onClick = { () => this.handleReportClick() } label = "Generate report" />
+          </FieldSet>
+        </div>
 
         <div className = "flex-grid-fifth">
           { shouldPlace && BOARD_MATRIX.length > 0 &&

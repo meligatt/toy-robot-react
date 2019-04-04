@@ -1,9 +1,14 @@
-* {
-  box-sizing: border-box;
-}
+@import 'src/styles/abstracts/variables/_gutter';
 
 .board-main {
-  padding: 1rem 0;
+  padding: $gutter 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-main__searchbar {
+  padding: $gutter 0;
 }
 
 .flex-grid {
@@ -21,7 +26,6 @@
 
 .flex-grid-fifth {
   display: flex;
-  justify-content: center;
 }
 
 .flex-grid-fifth .col {
