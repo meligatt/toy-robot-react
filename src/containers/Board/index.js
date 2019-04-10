@@ -60,7 +60,8 @@ class Board extends Component{
       robotDirection: 'SOUTH',
       shouldPlace: false,
       shouldReport: false,
-      reportMessage: null
+      reportMessage: null,
+      obstacle: [3,2]
     };
   }
   handlePositionBlur(event) {
@@ -137,26 +138,35 @@ class Board extends Component{
       reportMessage: newReportMessage
     });
   }
-  renderColumn(column, index, robotPosY, robotPosX, robotDirection) {
+  renderColumn(column, index, robotPosY, robotPosX, robotDirection, hasObstacle) {
     return (
       <div key = { index } style = { {transform: 'rotate(180deg)'} } role = "row">
         {
           column.map((_, index) => {
             if (robotPosY  === index){
               return <Tile key = { index } show = { true } direction = { robotDirection } />;
-            } else {
-              return <Tile key = { index } show = { false } />;
             }
+            if (this.state.obstacle[1] === index){
+              return <Tile key = { index } show = { false } hasObstacle = { hasObstacle }/>;
+            }
+
+            return <Tile key = { index } show = { false } hasObstacle = { false }/>;
           })
         }
       </div>
     );
   }
-  renderEmptyColumn(column, index) {
+  renderEmptyColumn(column, index, hasObstacle) {
     return (
-      <div key = { index } role = "row">
+      <div key = { index } style = { {transform: 'rotate(180deg)'} } role = "row">
         {
-          column.map((_, index) => <Tile key = { index } id = { index } show = { false }/>)
+          column.map((_, index) => {
+            if (this.state.obstacle[1] === index){
+              return <Tile key = { index } show = { false } hasObstacle = { hasObstacle }/>;
+            }
+
+            return <Tile key = { index } show = { false } hasObstacle = { false }/>;
+          })
         }
       </div>
     );
@@ -165,7 +175,8 @@ class Board extends Component{
     return BOARD_MATRIX.map((column, index) => this.renderEmptyColumn(column, index));
   }
   render() {
-    const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage} =  this.state;
+    const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage, obstacle} =  this.state;
+
     return(
       <main className = "board-main">
         <div className = "flex-grid board-main__searchbar" role = "search">
@@ -198,6 +209,7 @@ class Board extends Component{
 
           <FieldSet legend = "Move">
             <Button onClick = { () => this.handleMoveClick() } label = "move forward" />
+
           </FieldSet>
 
           <FieldSet legend = "Report">
@@ -210,10 +222,11 @@ class Board extends Component{
 
           { shouldPlace && BOARD_MATRIX.length > 0 &&
               BOARD_MATRIX.map((column, index) => {
+                const hasObstacle = (obstacle[0] === index ? true : false );
                 if (robotPosX  === index){
-                  return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection);
+                  return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection, hasObstacle);
                 } else {
-                  return this.renderEmptyColumn(column, index);
+                  return this.renderEmptyColumn(column, index, hasObstacle);
                 }
               })
           }

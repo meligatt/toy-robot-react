@@ -4,14 +4,15 @@ import PropTypes from 'prop-types';
 
 const Tile = ({
   show,
-  direction
+  direction,
+  hasObstacle
 }) => {
   return(
     <div className = "col" role = "cell">
       { show ?
         <div className = { `tile tile--full tile-full--facing-${direction.toLowerCase()}` } />
         :
-        <div className = "tile" />
+        hasObstacle ? <div className = { 'tile tile--obstacle' } /> : <div className = "tile" />
       }
     </div>
   );
@@ -19,7 +20,8 @@ const Tile = ({
 
 Tile.propTypes = {
   show:PropTypes.bool,
-  direction:PropTypes.string
+  direction:PropTypes.string,
+  hasObstacle:PropTypes.bool,
 };
 
 export default Tile;
