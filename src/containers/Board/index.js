@@ -99,10 +99,17 @@ class Board extends Component{
     });
   }
   handleRandomObstacleClick() {
-    // const randomPos = Math.floor(Math.random() * Math.floor(BOARD_WIDTH));
-    // this.setState({
-    //   obstacle: [randomPos, randomPos]
-    // });
+    const randomPosX = Math.floor(Math.random() * Math.floor(BOARD_WIDTH));
+    const randomPosY = Math.floor(Math.random() * Math.floor(BOARD_HEIGHT));
+
+    const isValidPositionX = randomPosX !== this.state.robotPosX;
+    const isValidPositionY = randomPosY !== this.state.robotPosY;
+
+    if(isValidPositionX || isValidPositionY){
+      this.setState({
+        obstacle: [randomPosX, randomPosY]
+      });
+    }
   }
   handleTurnClick(event) {
     const turnValue = event.target.value;
@@ -220,9 +227,9 @@ class Board extends Component{
               onBlur = { (e) => this.handleDirectionBlur(e) } />
             <Button onClick = { () => this.handlePlaceClick() } label = "Place"/>
           </FieldSet>
-          {/* <FieldSet legend = "Obstacle">
+          <FieldSet legend = "Obstacle">
             <Button onClick = { () => this.handleRandomObstacleClick() } label = "Random Obstacle"/>
-          </FieldSet> */}
+          </FieldSet>
 
           <FieldSet legend = "Rotate">
             <Button value = "RIGHT" onClick = { (e) => this.handleTurnClick(e) } label = "Right"/>
