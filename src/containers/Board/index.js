@@ -61,7 +61,7 @@ class Board extends Component{
       shouldPlace: false,
       shouldReport: false,
       reportMessage: null,
-      obstacle: [3,2]
+      obstacle: [0,2]
     };
   }
   componentDidUpdate(prevProps, prevState) {
@@ -98,6 +98,12 @@ class Board extends Component{
       shouldReport: false,
     });
   }
+  handleRandomObstacleClick() {
+    // const randomPos = Math.floor(Math.random() * Math.floor(BOARD_WIDTH));
+    // this.setState({
+    //   obstacle: [randomPos, randomPos]
+    // });
+  }
   handleTurnClick(event) {
     const turnValue = event.target.value;
     const currentRobotDirection = this.state.robotDirection;
@@ -109,7 +115,6 @@ class Board extends Component{
   }
   handleMoveClick() {
     const direction = this.state.robotDirection;
-    // validate if robot is runing into obstacle.
     switch (direction){
     case 'NORTH':
       this.setState({
@@ -160,7 +165,7 @@ class Board extends Component{
             if (robotPosY  === index){
               return <Tile key = { index } show = { true } direction = { robotDirection } />;
             }
-            if (this.state.obstacle[1] === index){
+            if (hasObstacle && this.state.obstacle[1] === index){
               return <Tile key = { index } show = { false } hasObstacle = { hasObstacle }/>;
             }
 
@@ -175,7 +180,7 @@ class Board extends Component{
       <div key = { index } style = { {transform: 'rotate(180deg)'} } role = "row">
         {
           column.map((_, index) => {
-            if (this.state.obstacle[1] === index){
+            if (hasObstacle && this.state.obstacle[1] === index){
               return <Tile key = { index } show = { false } hasObstacle = { hasObstacle }/>;
             }
 
@@ -215,6 +220,9 @@ class Board extends Component{
               onBlur = { (e) => this.handleDirectionBlur(e) } />
             <Button onClick = { () => this.handlePlaceClick() } label = "Place"/>
           </FieldSet>
+          {/* <FieldSet legend = "Obstacle">
+            <Button onClick = { () => this.handleRandomObstacleClick() } label = "Random Obstacle"/>
+          </FieldSet> */}
 
           <FieldSet legend = "Rotate">
             <Button value = "RIGHT" onClick = { (e) => this.handleTurnClick(e) } label = "Right"/>
@@ -236,7 +244,7 @@ class Board extends Component{
 
           { shouldPlace && BOARD_MATRIX.length > 0 &&
               BOARD_MATRIX.map((column, index) => {
-                const hasObstacle = (obstacle[0] === index ? true : false );
+                const hasObstacle = (obstacle.lenght !== 0 && obstacle[0] === index) ? true : false;
                 if (robotPosX  === index){
                   return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection, hasObstacle);
                 } else {
