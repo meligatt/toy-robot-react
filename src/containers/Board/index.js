@@ -60,8 +60,22 @@ class Board extends Component{
       robotDirection: 'SOUTH',
       shouldPlace: false,
       shouldReport: false,
-      reportMessage: null
+      reportMessage: null,
+      obstacle: [0,2]
     };
+  }
+  componentDidUpdate(prevProps, prevState) {
+    const hasRobotPosXChanged = prevState.robotPosX !== this.state.robotPosX;
+    const hasRobotPosYChanged = prevState.robotPosY !== this.state.robotPosY;
+    if(hasRobotPosXChanged || hasRobotPosYChanged){
+      // validate robotPos againts obstable.
+      if (this.state.robotPosX === this.state.obstacle[0] && this.state.robotPosY === this.state.obstacle[1]){
+        this.setState({
+          robotPosX: prevState.robotPosX,
+          robotPosY: prevState.robotPosY
+        });
+      }
+    }
   }
   handlePositionBlur(event) {
     const id = event.target.id;
@@ -83,6 +97,19 @@ class Board extends Component{
       shouldPlace: true,
       shouldReport: false,
     });
+  }
+  handleRandomObstacleClick() {
+    const randomPosX = Math.floor(Math.random() * Math.floor(BOARD_WIDTH));
+    const randomPosY = Math.floor(Math.random() * Math.floor(BOARD_HEIGHT));
+
+    const isValidPositionX = randomPosX !== this.state.robotPosX;
+    const isValidPositionY = randomPosY !== this.state.robotPosY;
+
+    if(isValidPositionX || isValidPositionY){
+      this.setState({
+        obstacle: [randomPosX, randomPosY]
+      });
+    }
   }
   handleTurnClick(event) {
     const turnValue = event.target.value;
@@ -137,26 +164,35 @@ class Board extends Component{
       reportMessage: newReportMessage
     });
   }
-  renderColumn(column, index, robotPosY, robotPosX, robotDirection) {
+  renderColumn(column, index, robotPosY, robotPosX, robotDirection, hasObstacle) {
     return (
       <div key = { index } style = { {transform: 'rotate(180deg)'} } role = "row">
         {
           column.map((_, index) => {
             if (robotPosY  === index){
               return <Tile key = { index } show = { true } direction = { robotDirection } />;
-            } else {
-              return <Tile key = { index } show = { false } />;
             }
+            if (hasObstacle && this.state.obstacle[1] === index){
+              return <Tile key = { index } show = { false } hasObstacle = { hasObstacle }/>;
+            }
+
+            return <Tile key = { index } show = { false } hasObstacle = { false }/>;
           })
         }
       </div>
     );
   }
-  renderEmptyColumn(column, index) {
+  renderEmptyColumn(column, index, hasObstacle) {
     return (
-      <div key = { index } role = "row">
+      <div key = { index } style = { {transform: 'rotate(180deg)'} } role = "row">
         {
-          column.map((_, index) => <Tile key = { index } id = { index } show = { false }/>)
+          column.map((_, index) => {
+            if (hasObstacle && this.state.obstacle[1] === index){
+              return <Tile key = { index } show = { false } hasObstacle = { hasObstacle }/>;
+            }
+
+            return <Tile key = { index } show = { false } hasObstacle = { false }/>;
+          })
         }
       </div>
     );
@@ -165,7 +201,8 @@ class Board extends Component{
     return BOARD_MATRIX.map((column, index) => this.renderEmptyColumn(column, index));
   }
   render() {
-    const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage} =  this.state;
+    const {robotPosX, robotPosY, robotDirection, shouldPlace, shouldReport, reportMessage, obstacle} =  this.state;
+
     return(
       <main className = "board-main">
         <div className = "flex-grid board-main__searchbar" role = "search">
@@ -190,6 +227,9 @@ class Board extends Component{
               onBlur = { (e) => this.handleDirectionBlur(e) } />
             <Button onClick = { () => this.handlePlaceClick() } label = "Place"/>
           </FieldSet>
+          <FieldSet legend = "Obstacle">
+            <Button onClick = { () => this.handleRandomObstacleClick() } label = "Random Obstacle"/>
+          </FieldSet>
 
           <FieldSet legend = "Rotate">
             <Button value = "RIGHT" onClick = { (e) => this.handleTurnClick(e) } label = "Right"/>
@@ -198,6 +238,7 @@ class Board extends Component{
 
           <FieldSet legend = "Move">
             <Button onClick = { () => this.handleMoveClick() } label = "move forward" />
+
           </FieldSet>
 
           <FieldSet legend = "Report">
@@ -210,10 +251,11 @@ class Board extends Component{
 
           { shouldPlace && BOARD_MATRIX.length > 0 &&
               BOARD_MATRIX.map((column, index) => {
+                const hasObstacle = (obstacle.lenght !== 0 && obstacle[0] === index) ? true : false;
                 if (robotPosX  === index){
-                  return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection);
+                  return this.renderColumn(column, index, robotPosY, robotPosX, robotDirection, hasObstacle);
                 } else {
-                  return this.renderEmptyColumn(column, index);
+                  return this.renderEmptyColumn(column, index, hasObstacle);
                 }
               })
           }

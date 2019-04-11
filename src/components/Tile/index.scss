@@ -13,6 +13,14 @@
   background-size: cover;
 }
 
+.tile--obstacle {
+  background-image: url("obstacle.png");
+  background-size: contain;
+  transform: rotate(180deg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .tile-full--facing-north {
   transform: rotate(180deg);
 }
