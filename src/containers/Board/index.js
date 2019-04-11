@@ -64,6 +64,19 @@ class Board extends Component{
       obstacle: [3,2]
     };
   }
+  componentDidUpdate(prevProps, prevState) {
+    const hasRobotPosXChanged = prevState.robotPosX !== this.state.robotPosX;
+    const hasRobotPosYChanged = prevState.robotPosY !== this.state.robotPosY;
+    if(hasRobotPosXChanged || hasRobotPosYChanged){
+      // validate robotPos againts obstable.
+      if (this.state.robotPosX === this.state.obstacle[0] && this.state.robotPosY === this.state.obstacle[1]){
+        this.setState({
+          robotPosX: prevState.robotPosX,
+          robotPosY: prevState.robotPosY
+        });
+      }
+    }
+  }
   handlePositionBlur(event) {
     const id = event.target.id;
     const value = parseInt(event.target.value, 10);
@@ -96,6 +109,7 @@ class Board extends Component{
   }
   handleMoveClick() {
     const direction = this.state.robotDirection;
+    // validate if robot is runing into obstacle.
     switch (direction){
     case 'NORTH':
       this.setState({
