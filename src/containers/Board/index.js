@@ -1,10 +1,10 @@
 import './index.scss';
 import React, { Component } from 'react';
-import Tile from './../../components/Tile';
-import Select from './../../components/Select';
-import Button from './../../components/Button';
-import Alert from './../../components/Alert';
-import FieldSet from './../../components/FieldSet';
+import Tile from '../../components/Tile';
+import Select from '../../components/Select';
+import Button from '../../components/Button';
+import Alert from '../../components/Alert';
+import FieldSet from '../../components/FieldSet';
 
 const BOARD_WIDTH = 5;
 const BOARD_HEIGHT = 5;
